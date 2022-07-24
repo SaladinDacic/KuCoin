@@ -1,4 +1,3 @@
-import { mainMethods } from './chuncks';
 import { requiredFields } from './chuncks';
 import { optionalFields } from './chuncks';
 import {
@@ -10,32 +9,39 @@ export const publicApiOperations = [
     //         Methods setup
     // ----------------------------------
     {
-        displayName: 'Method',
-        name: 'method',
+        displayName: 'Operations',
+        name: 'operation',
         required: true,
         type: 'options',
         options: [
             {
-                name: 'Get',
-                value: 'get',
+                name: 'Place a new order',
+                value: 'placeNewOrder',
+                description: 'Send in a new order..',
             },
             {
-                name: 'Create/Update data (Post)',
-                value: 'post',
+                name: 'Cancel an order',
+                value: 'cancelOrder',
+                description: 'Cancel an active order.',
             },
             {
-                name: 'Remove',
-                value: 'delete',
+                name: 'Cancel all orders',
+                value: 'cancelAllOrders',
+                description: 'Cancels all active orders.',
+            },
+            {
+                name: 'Get an order',
+                value: 'getAnOrder',
+                // description: "",
+            },
+            {
+                name: 'List Orders',
+                value: 'listOrders',
+                description: 'List all orders.',
             },
         ],
-        default: 'get',
         description: 'Methods to use',
     },
-
-    // ----------------------------------
-    //     all three main Methods
-    // ----------------------------------
-    ...mainMethods,
 
     // ----------------------------------
     //      All required fields

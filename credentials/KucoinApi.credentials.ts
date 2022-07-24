@@ -15,7 +15,28 @@ export class KucoinApi implements ICredentialType {
 			displayName: 'API Key',
 			name: 'apiKey',
 			type: 'string',
+			required : true,
 			default: '',
+		},
+		{
+			displayName: 'API Secret',
+			name: 'apiSecret',
+			type: 'string',
+			required: true,
+			default: '',
+		},
+		{
+			displayName: 'Passphrase',
+			name: 'apiPassphrase',
+			type: 'string',
+			required: true,
+			default: '',
+		},
+		{
+			displayName: 'Api Version',
+			name: 'apiVersion',
+			type: 'string',
+			default: '1.0',
 		},
 	];
 }

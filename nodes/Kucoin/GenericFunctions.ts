@@ -31,6 +31,12 @@ export async function kucoinApiRequest(this: IHookFunctions | IExecuteFunctions 
 		headers: {
 			'Accept': 'application/json',
 			'Authorization': `Bearer ${credentials.apiKey}`,
+			'KC-API-SIGN': `${credentials.apiSecret}`,
+			'KC-API-TIMESTAMP': String(Date.now()),
+			'KC-API-KEY': `${credentials.apiKey}`,
+			'KC-API-PASSPHRASE': `${credentials.apiPassphrase}`,
+			'KC-API-KEY-VERSION': `${credentials.apiVersion === "2.0"? 2: 1}`
+
 		},
 		qs,
 		body,

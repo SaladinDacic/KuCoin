@@ -13,7 +13,6 @@ export const requiredFields = [
         default: '',
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -27,7 +26,6 @@ export const requiredFields = [
         default: '',
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -41,7 +39,6 @@ export const requiredFields = [
         default: '',
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -54,7 +51,6 @@ export const requiredFields = [
         type: 'string',
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -67,7 +63,6 @@ export const requiredFields = [
         type: 'string',
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -80,7 +75,6 @@ export const requiredFields = [
         type: 'string',
         displayOptions: {
             show: {
-                method : ['delete','get'],
                 operation: ['cancelOrder','getAnOrder'],
             },
         },
@@ -93,7 +87,6 @@ export const requiredFields = [
         type: 'string',
         displayOptions: {
             show: {
-                method : ['get'],
                 operation: ['listOrders'],
             },
         },

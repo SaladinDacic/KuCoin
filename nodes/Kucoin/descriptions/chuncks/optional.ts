@@ -18,7 +18,6 @@ export const optionalFields = [
 		},
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -69,7 +68,6 @@ export const optionalFields = [
 		},
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -128,7 +126,6 @@ export const optionalFields = [
 		},
         displayOptions: {
             show: {
-                method : ['post'],
                 operation: ['placeNewOrder'],
             },
         },
@@ -166,7 +163,6 @@ export const optionalFields = [
 		},
         displayOptions: {
             show: {
-                method : ['delete'],
                 operation: ['cancelAllOrders'],
             },
         },
@@ -204,19 +200,10 @@ export const optionalFields = [
 		},
         displayOptions: {
             show: {
-                method : ['get'],
                 operation: ['listOrders'],
             },
         },
         options: [
-            {
-                displayName: 'Symbol',
-                name: 'symbol',
-                type: 'string',
-                default: "",
-                required: false,
-                description: "symbol, cancel the orders for the specified trade pair.",
-            },
             {
                 displayName: 'Trade Type',
                 name: 'tradeType',
