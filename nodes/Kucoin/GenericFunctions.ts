@@ -29,18 +29,17 @@ export async function kucoinApiRequest(this: IHookFunctions | IExecuteFunctions 
 	const options: OptionsWithUri = {
 		method,
 		headers: {
-			'Accept': 'application/json',
-			'Authorization': `Bearer ${credentials.apiKey}`,
-			'KC-API-SIGN': `${credentials.apiSecret}`,
-			'KC-API-TIMESTAMP': String(Date.now()),
-			'KC-API-KEY': `${credentials.apiKey}`,
-			'KC-API-PASSPHRASE': `${credentials.apiPassphrase}`,
-			'KC-API-KEY-VERSION': `${credentials.apiVersion === "2.0"? 2: 1}`
-
+			Accept: "application/json",
+			Authorization: `Bearer ${credentials.apiKey}`,
+			"KC-API-SIGN": `${credentials.apiSecret}`,
+			"KC-API-TIMESTAMP": String(Date.now()),
+			"KC-API-KEY": `${credentials.apiKey}`,
+			"KC-API-PASSPHRASE": `${credentials.apiPassphrase}`,
+			"KC-API-KEY-VERSION": `${credentials.apiVersion === "2.0" ? 2 : 1}`,
 		},
 		qs,
 		body,
-		uri: uri || `https://api.sendgrid.com/v3/${endpoint}`,
+		uri: uri || `https://api.kucoin.com/${endpoint}`,
 		json: true,
 	};
 
