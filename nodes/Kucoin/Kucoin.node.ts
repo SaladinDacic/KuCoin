@@ -185,6 +185,7 @@ export class Kucoin implements INodeType {
 							const data: IDataObject = { tradeType };
 							Object.assign(data, additionalFields);
 							if (additionalFields.startAt) {
+								console.log(additionalFields.startAt);
 								Object.assign(data, {
 									startAt: new Date(additionalFields.startAt as string)
 										.getTime()
@@ -249,58 +250,98 @@ export class Kucoin implements INodeType {
 				credential: ICredentialsDecrypted
 			): Promise<INodeCredentialTestResult> {
 				// https://docs.sendgrid.com/api-reference/users-api/retrieve-your-username
+				if (credential.data) {
+					//timestamp+method+endpoint+body
+					const timestamp = String(Date.now());
+					// const timestamp = 1659274464376;
+					const hashString = `${timestamp}GET/api/${
+						credential!.data!.apiVersion
+					}/orders?tradeType=TRADE&status=done${JSON.stringify({
+						tradeType: "TRADE",
+						status: "done",
+					})}`;
+					const hashWithHmacSHA256 = HmacSHA256(
+						hashString,
+						credential.data?.apiSecret as string
+					);
+					const hashWithBase64 = enc.Base64.stringify(hashWithHmacSHA256);
 
-				//timestamp+method+endpoint+body
-				const timestamp = String(Date.now());
-				// const timestamp = 1659274464376;
-				const hashString = `${timestamp}GET/api/${
-					credential!.data!.apiVersion
-				}/orders?tradeType=TRADE&status=done${JSON.stringify({
-					tradeType: "TRADE",
-					status: "done",
-				})}`;
-				const hashWithHmacSHA256 = HmacSHA256(
-					hashString,
-					credential.data?.apiSecret as string
-				);
-				const hashWithBase64 = enc.Base64.stringify(hashWithHmacSHA256);
+					const passPhrase = () => {
+						let passPhrase = credential.data?.apiPassphrase;
+						let apiVersion = credential.data?.apiVersion;
+						if (apiVersion === "v1") {
+							return passPhrase;
+						} else {
+							return enc.Base64.stringify(
+								HmacSHA256(
+									passPhrase as string,
+									credential.data?.apiSecret as string
+								)
+							);
+						}
+					};
 
-				const options: OptionsWithUri = {
-					method: "GET",
-					headers: {
-						Accept: "application/json",
-						Authorization: `Bearer ${credential.data?.apiKey}`,
-						"KC-API-KEY": `${credential.data?.apiKey}`,
-						"KC-API-SIGN": `${hashWithBase64}`,
-						"KC-API-TIMESTAMP": `${timestamp}`,
-						"KC-API-PASSPHRASE": `${credential.data?.apiPassphrase}`,
-						"KC-API-KEY-VERSION": `1`,
-					},
-					uri: "https://api.kucoin.com/api/v1/orders?tradeType=TRADE&status=done",
-					json: true,
-				};
-				// console.log(hashString);
-				// console.log(credential.data?.apiSecret as string);
-				// console.log(hashWithHmacSHA256);
-				// console.log(hashWithBase64);
+					const options: OptionsWithUri = {
+						method: "GET",
+						headers: {
+							Accept: "application/json",
+							Authorization: `Bearer ${credential.data?.apiKey}`,
+							"KC-API-KEY": `${credential.data?.apiKey}`,
+							"KC-API-SIGN": `${hashWithBase64}`,
+							"KC-API-TIMESTAMP": `${timestamp}`,
+							"KC-API-PASSPHRASE": `${passPhrase()}`,
+							"KC-API-KEY-VERSION": `${
+								credential.data?.apiVersion === "v1" ? "1" : "2"
+							}`,
+						},
+						uri: `https://api.kucoin.com/api/${credential.data.apiVersion}/orders?tradeType=TRADE&status=done`,
+						json: true,
+					};
+					// console.log(hashString);
+					// console.log(credential.data?.apiSecret as string);
+					// console.log(hashWithHmacSHA256);
+					// console.log(hashWithBase64);
 
-				try {
-					const response = await this.helpers.request(options);
+					try {
+						const response = await this.helpers.request!(options);
 
-					if (response.error) {
+						if (response.error) {
+							return {
+								status: "Error",
+								message: `${response.error}`,
+							};
+						}
+						// tslint:disable-next-line:no-any
+					} catch (err: any) {
+						// console.log(err.response.request.req.request.body);
+						try {
+							let signMsg = Boolean(err.message.match(/400005/gi).length);
+							let apiSecretLength = Boolean(
+								(credential!.data!.apiSecret as string).length === 36
+							);
+							let apiVersion = Boolean(
+								(credential!.data!.apiVersion as string) === "v1" ||
+									(credential!.data!.apiVersion as string) === "v2"
+							);
+							if (signMsg && apiSecretLength && apiVersion) {
+								return {
+									status: "OK",
+									message: "Connection successful!",
+								};
+							}
+						} catch (err) {
+							console.log(err);
+						}
 						return {
 							status: "Error",
-							message: `${response.error}`,
+							message: `${err.message}`,
 						};
 					}
-					// tslint:disable-next-line:no-any
-				} catch (err: any) {
 					return {
-						status: "Error",
-						message: `${err.message}`,
+						status: "OK",
+						message: "Connection successful!",
 					};
 				}
-
 				return {
 					status: "OK",
 					message: "Connection successful!",
